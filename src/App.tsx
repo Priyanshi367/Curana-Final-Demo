@@ -2,12 +2,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { LayoutProvider } from "./contexts/LayoutContext";
+import ChatbotWidget from "./components/ChatbotWidget";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import ChatPage from "./pages/ChatPage";
 import About from "./pages/About";
 import Network from "./pages/Network";
 import Departments from "./pages/Departments";
@@ -29,6 +31,16 @@ import Providers from "./pages/Providers";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+// Component to conditionally render chatbot
+const ChatbotWrapper = () => {
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/login" || location.pathname === "/";
+  const isChatPage = location.pathname === "/chat";
+  
+  if (isLoginPage || isChatPage) return null;
+  return <ChatbotWidget />;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -62,9 +74,11 @@ const App = () => (
                 <Route path="/news/:id" element={<NewsDetail />} />
                 <Route path="/providers" element={<Providers />} />
                 <Route path="/organization-chart" element={<OrganizationChart />} />
+                <Route path="/chat" element={<ChatPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <ChatbotWrapper />
             </BrowserRouter>
           </TooltipProvider>
         </LayoutProvider>
