@@ -30,7 +30,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           <Sidebar />
           <main
             className={`pt-[56px] transition-all duration-300 ${isCollapsed ? "md:pl-[76px]" : "md:pl-[296px]"
-              } px-2 sm:px-4 pb-8`}
+              } px-2 sm:px-4 pb-0`}
           >
             {children}
           </main>

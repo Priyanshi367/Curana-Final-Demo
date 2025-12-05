@@ -271,7 +271,7 @@ const ChatPage: React.FC = () => {
 
   return (
     <DashboardLayout>
-      <div className="flex h-[calc(100vh-3rem)] bg-background overflow-hidden relative">
+      <div className="flex h-[calc(100vh-4rem)] bg-background overflow-hidden relative">
         {/* Mobile Overlay */}
         {showSidebar && (
           <div

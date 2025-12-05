@@ -2,20 +2,30 @@ import DashboardLayout from "@/components/DashboardLayout";
 import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
 import QuickLinks from "@/components/dashboard/QuickLinks";
 import NewsBlock from "@/components/dashboard/NewsBlock";
-import NewsBlockCompact from "@/components/dashboard/NewsBlockCompact";
-import NewsBlockGrid from "@/components/dashboard/NewsBlockGrid";
-import NewsBlockVertical from "@/components/dashboard/NewsBlockVertical";
-import NewsBlockMinimal from "@/components/dashboard/NewsBlockMinimal";
-import NewsBlockMagazine from "@/components/dashboard/NewsBlockMagazine";
 import EventsBlock from "@/components/dashboard/EventsBlock";
-import ApplicationsGrid from "@/components/dashboard/ApplicationsGrid";
 import EssentialTools from "@/components/dashboard/EssentialTools";
 import FavoriteAppsCarousel from "@/components/dashboard/FavoriteAppsCarousel";
 import AnnouncementShowcase from "@/components/dashboard/AnnouncementShowcase";
-import MyTeam from "@/components/dashboard/MyTeam";
 import MyFiles from "@/components/dashboard/MyFiles";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
+  const handleOpenAnnouncement = (id: number) => {
+    console.log("Opening announcement:", id);
+    navigate("/announcements");
+  };
+
+  const handleMarkAsRead = (id: number) => {
+    console.log("Marking announcement as read:", id);
+    // Update announcement read status in global state/API
+  };
+
+  const handleViewAllAnnouncements = () => {
+    navigate("/announcements");
+  };
+
   return (
     <DashboardLayout>
       <div className="max-w-[1600px] mx-auto px-4 space-y-6 mt-5">
@@ -28,7 +38,11 @@ const Dashboard = () => {
             <FavoriteAppsCarousel />
           </div>
           <div className="md:col-span-1 xl:col-span-1">
-            <AnnouncementShowcase />
+            <AnnouncementShowcase
+              onOpen={handleOpenAnnouncement}
+              onMarkAsRead={handleMarkAsRead}
+              onViewAll={handleViewAllAnnouncements}
+            />
           </div>
         </div>
 

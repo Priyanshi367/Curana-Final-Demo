@@ -58,7 +58,7 @@ const FavoriteAppsCarousel = () => {
   if (favoriteApps.length === 0) return null;
 
   return (
-    <Card className="p-4 sm:p-6 h-[180px] flex flex-col">
+    <Card className="p-4 sm:p-6 h-[220px] flex flex-col">
       <div className="flex items-center gap-2 mb-4">
         <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
           <Star className="h-4 w-4 sm:h-4 sm:w-4 text-accent fill-accent" />
@@ -67,20 +67,20 @@ const FavoriteAppsCarousel = () => {
       </div>
 
       {/* Apps Grid */}
-      <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-3 flex-1">
+      <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-4 flex-1 items-center">
         {favoriteApps.map((app) => (
           <a
             key={app.id}
             href={app.url}
-            className="group flex flex-col items-center gap-2"
+            className="group flex flex-col items-center justify-center gap-2"
           >
-            <div className="relative h-12 w-12 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 p-2.5 flex items-center justify-center group-hover:scale-110 transition-all shadow-sm border border-gray-200 dark:border-gray-500">
+            <div className="relative h-14 w-14 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 p-3 flex items-center justify-center group-hover:scale-110 transition-all shadow-sm border border-gray-200 dark:border-gray-500">
               {/* Star badge on top right with gradient */}
               <div 
-                className="absolute -top-1 -right-1 h-4 w-4 rounded-full flex items-center justify-center shadow-md z-20" 
+                className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full flex items-center justify-center shadow-md z-20" 
                 style={{ background: 'var(--header-gradient)' }}
               >
-                <Star className="h-2 w-2 text-white fill-white" />
+                <Star className="h-2.5 w-2.5 text-white fill-white" />
               </div>
               <img
                 src={app.logo}
