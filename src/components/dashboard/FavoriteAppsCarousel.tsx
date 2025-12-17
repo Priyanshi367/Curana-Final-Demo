@@ -18,7 +18,7 @@ type Application = {
 };
 
 const defaultApplications: Application[] = [
-  { id: "teams", name: "Microsoft Teams", logo: teams, url: "#" },
+  { id: "gehrimed", name: "Microsoft Teams", logo: teams, url: "#" },
   { id: "outlook", name: "Outlook", logo: outlook, url: "#" },
   { id: "workday", name: "Workday", logo: workdaylogo, url: "#" },
   { id: "epic", name: "Epic EHR", logo: epiclogo, url: "#" },

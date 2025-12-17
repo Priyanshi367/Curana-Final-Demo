@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { X, Maximize2, Send, Stethoscope, Search, DollarSign, Phone } from "lucide-react";
+import { X, Send, Stethoscope, Search, DollarSign, Phone, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-
-type ChatState = "collapsed" | "mini";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface Message {
   id: string;
@@ -17,11 +16,12 @@ interface Message {
 
 const ChatbotWidget: React.FC = () => {
   const navigate = useNavigate();
-  const [chatState, setChatState] = useState<ChatState>("collapsed");
+  const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hi! 👋 I'm your Curana Hub AI Assistant. I can help you find information, navigate the intranet, and answer questions about policies, benefits, and more. What can I help you with today?",
+      text: "Hi! 👋 I'm Cura, your AI assistant. How can I help you today?",
       sender: "bot",
       timestamp: new Date(),
     },
@@ -77,21 +77,22 @@ const ChatbotWidget: React.FC = () => {
   };
 
   const openChat = () => {
-    setChatState("mini");
+    setIsOpen(true);
     setUnreadCount(0);
   };
 
   const closeChat = () => {
-    setChatState("collapsed");
+    setIsOpen(false);
   };
 
   const handleExpand = () => {
-    navigate("/chat");
+    navigate('/chat');
+    setIsOpen(false);
   };
 
-  // Collapsed Bubble
-  if (chatState === "collapsed") {
-    return (
+  // Chat Launcher Button
+  return (
+    <>
       <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50">
         <button
           onClick={openChat}
@@ -107,125 +108,114 @@ const ChatbotWidget: React.FC = () => {
           )}
         </button>
       </div>
-    );
-  }
 
-  // Mini Chatbox
-  if (chatState === "mini") {
-    return (
-      <Card className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 w-[calc(100vw-2rem)] sm:w-96 h-[calc(100vh-5rem)] sm:h-[550px] max-h-[600px] flex flex-col shadow-2xl animate-in slide-in-from-bottom-4 duration-300 rounded-2xl overflow-hidden">
-        {/* Header */}
-        <div
-          className="flex items-center justify-between p-3 md:p-4 border-b text-white"
-          style={{ background: "var(--header-gradient)" }}
-        >
-          <div className="flex items-center gap-2 md:gap-3">
-            <div className="h-8 w-8 md:h-10 md:w-10 rounded-xl bg-white/20 flex items-center justify-center">
-              <Stethoscope className="h-5 w-5 md:h-6 md:w-6" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-sm md:text-base">Curana AI Assistant</h3>
-              <p className="text-[10px] md:text-xs opacity-90">Online • Ready to help</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 md:gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleExpand}
-              className="h-7 w-7 md:h-8 md:w-8 text-white hover:bg-white/20 rounded-lg"
-            >
-              <Maximize2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={closeChat}
-              className="h-7 w-7 md:h-8 md:w-8 text-white hover:bg-white/20 rounded-lg"
-            >
-              <X className="h-3.5 w-3.5 md:h-4 md:w-4" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="p-2 md:p-3 border-b bg-gradient-to-br from-muted/30 to-muted/10">
-          <div className="flex gap-1.5 md:gap-2">
-            {quickActions.map((action, index) => (
-              <button
-                key={index}
-                className="flex-1 flex items-center justify-center gap-1 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-xl bg-card hover:shadow-md transition-all duration-200 border hover:scale-[1.02]"
-              >
-                <div className={cn("p-0.5 md:p-1 rounded-lg bg-gradient-to-br text-white", action.gradient)}>
-                  <action.icon className="h-3 w-3 md:h-3.5 md:w-3.5" />
-                </div>
-                <span className="text-[10px] md:text-xs font-medium hidden sm:inline">{action.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 bg-gradient-to-br from-muted/10 to-background">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={cn(
-                "flex animate-in fade-in slide-in-from-bottom-2 duration-300",
-                message.sender === "user" ? "justify-end" : "justify-start"
-              )}
-            >
-              <div
-                className={cn(
-                  "max-w-[85%] md:max-w-[80%] rounded-2xl p-2.5 md:p-3 shadow-md",
-                  message.sender === "user"
-                    ? "text-white rounded-br-md"
-                    : "bg-white border rounded-bl-md"
-                )}
-                style={
-                  message.sender === "user"
-                    ? { background: "var(--header-gradient)" }
-                    : {}
-                }
-              >
-                <p className="text-xs md:text-sm leading-relaxed">{message.text}</p>
-                <span className="text-[10px] md:text-xs opacity-70 mt-1 md:mt-1.5 block">
-                  {message.timestamp.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="max-w-2xl w-[calc(100%-2rem)] h-[80vh] max-h-[800px] p-0 overflow-hidden flex flex-col [&>button]:hidden" style={{ padding: 0 }}>
+          <div 
+            className="flex items-center justify-between p-4 border-b text-white"
+            style={{ background: "var(--header-gradient)" }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-white/20 flex items-center justify-center">
+                <Stethoscope className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-base">Cura</h3>
+                <p className="text-xs opacity-90">Online • Ready to help</p>
               </div>
             </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Input */}
-        <div className="p-3 md:p-4 border-t bg-card">
-          <div className="flex gap-2">
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyPress}
-              placeholder="Ask me anything..."
-              className="flex-1 h-9 md:h-10 text-xs md:text-sm rounded-xl border-2 focus:border-accent/50"
-            />
-            <Button
-              onClick={handleSendMessage}
-              size="icon"
-              className="h-9 w-9 md:h-10 md:w-10 text-white rounded-xl shadow-md hover:shadow-lg transition-all hover:scale-105"
-              style={{ background: "var(--header-gradient)" }}
-            >
-              <Send className="h-3.5 w-3.5 md:h-4 md:w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleExpand}
+                className="h-8 w-8 text-white hover:bg-white/20 rounded-lg"
+                title="Expand to full page"
+              >
+                <Maximize2 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={closeChat}
+                className="h-8 w-8 text-white hover:bg-white/20 rounded-lg"
+                title="Close chat"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
-        </div>
-      </Card>
-    );
-  }
 
-  return null;
+          <div className="flex-1 overflow-hidden flex flex-col">
+            <div className="p-2 border-b bg-gradient-to-br from-muted/30 to-muted/10">
+              <div className="flex gap-2">
+                {quickActions.map((action, index) => (
+                  <button
+                    key={index}
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-card hover:shadow-md transition-all duration-200 border hover:scale-[1.02] text-sm"
+                  >
+                    <div className={cn("p-1 rounded-lg bg-gradient-to-br text-white", action.gradient)}>
+                      <action.icon className="h-3.5 w-3.5" />
+                    </div>
+                    <span className="text-xs font-medium">{action.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-br from-muted/10 to-background">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={cn(
+                    "flex animate-in fade-in slide-in-from-bottom-2 duration-300",
+                    message.sender === "user" ? "justify-end" : "justify-start"
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "max-w-[85%] rounded-2xl p-3 shadow-md",
+                      message.sender === "user"
+                        ? "text-white rounded-br-md"
+                        : "bg-white border rounded-bl-md"
+                    )}
+                    style={
+                      message.sender === "user"
+                        ? { background: "var(--header-gradient)" }
+                        : {}
+                    }
+                  >
+                    <p className="text-sm leading-relaxed">{message.text}</p>
+                  </div>
+                </div>
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
+
+            <div className="p-3 border-t bg-card">
+              <div className="flex items-end gap-2">
+                <Input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your message..."
+                  className="flex-1 min-h-12 max-h-32 resize-none"
+                />
+                <Button
+                  onClick={handleSendMessage}
+                  className="h-12 w-12 p-0 flex-shrink-0"
+                  style={{ background: "var(--header-gradient)" }}
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 };
 
 export default ChatbotWidget;

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Send, Stethoscope, Plus, FileText, Flame, Users, BookOpen, Search, DollarSign, Phone, FileCheck, Heart } from "lucide-react";
+import { ArrowLeft, Send, Stethoscope, Plus, FileText, Flame, Users, BookOpen, Search, DollarSign, Phone, FileCheck, Heart, Menu, X, MessageSquare, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -172,18 +172,18 @@ const ChatPage: React.FC = () => {
   ];
 
   const quickActions = [
-    { icon: Search, label: "Find benefits", gradient: "from-blue-500 to-cyan-500" },
-    { icon: DollarSign, label: "Submit expenses", gradient: "from-green-500 to-emerald-500" },
-    { icon: Phone, label: "HR contact", gradient: "from-purple-500 to-pink-500" },
-    { icon: FileCheck, label: "Policies", gradient: "from-orange-500 to-red-500" },
-    { icon: Heart, label: "Healthcare info", gradient: "from-rose-500 to-pink-500" },
+    { icon: Search, label: "Find benefits", gradient: "from-blue-500 to-blue-600" },
+    { icon: DollarSign, label: "Submit expenses", gradient: "from-emerald-500 to-emerald-600" },
+    { icon: Phone, label: "HR contact", gradient: "from-violet-500 to-violet-600" },
+    { icon: FileCheck, label: "Policies", gradient: "from-amber-500 to-amber-600" },
+    { icon: Heart, label: "Healthcare info", gradient: "from-rose-500 to-rose-600" },
   ];
 
   const quickQuestions = [
-    { icon: FileText, label: "Policies", color: "text-purple-500" },
-    { icon: Flame, label: "Benefits", color: "text-orange-500" },
-    { icon: Users, label: "Directory", color: "text-purple-600" },
-    { icon: BookOpen, label: "Training", color: "text-pink-500" },
+    { icon: FileText, label: "Company Policies", color: "text-blue-600" },
+    { icon: Flame, label: "Employee Benefits", color: "text-amber-500" },
+    { icon: Users, label: "Staff Directory", color: "text-violet-600" },
+    { icon: BookOpen, label: "Training Resources", color: "text-emerald-600" },
   ];
 
   const scrollToBottom = () => {
@@ -280,75 +280,6 @@ const ChatPage: React.FC = () => {
           />
         )}
 
-        {/* Left Sidebar - Modern Design */}
-        <div className={cn(
-          "w-72 md:w-64 border-r flex flex-col transition-transform duration-300 z-50",
-          "fixed lg:relative inset-y-0 left-0 h-full",
-          "bg-card lg:bg-gradient-to-b lg:from-card lg:via-card lg:to-muted/20",
-          "shadow-2xl lg:shadow-none",
-          showSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        )}>
-          {/* Sidebar Header */}
-          <div className="p-4 md:p-5">
-            <Button
-              onClick={handleNewChat}
-              className="w-full text-white rounded-2xl shadow-md hover:shadow-xl transition-all hover:scale-[1.02] h-10 md:h-11 text-sm"
-              style={{ background: "var(--header-gradient)" }}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              <span className="font-semibold">New Chat</span>
-            </Button>
-          </div>
-
-          {/* Conversations List */}
-          <div className="flex-1 overflow-y-auto px-2 md:px-3 scrollbar-thin">
-            {Object.entries(groupedConversations).map(([category, convs]) => (
-              <div key={category} className="mb-6">
-                <div className="px-2 md:px-3 py-2 text-[10px] font-bold text-muted-foreground/70 tracking-wider">
-                  {getCategoryLabel(category)}
-                </div>
-                <div className="space-y-1">
-                  {convs.map((conv) => (
-                    <button
-                      key={conv.id}
-                      onClick={() => {
-                        handleConversationChange(conv.id);
-                        setShowSidebar(false);
-                      }}
-                      className={cn(
-                        "w-full px-2 md:px-3 py-2 md:py-2.5 text-left rounded-r-xl transition-all duration-200 group border-l-4",
-                        activeConversation === conv.id
-                          ? "bg-accent/10 border-accent shadow-sm"
-                          : "border-transparent hover:bg-muted/60 hover:border-accent/30"
-                      )}
-                    >
-                      <h3 className="font-semibold text-xs md:text-sm mb-1 truncate">
-                        {conv.title}
-                      </h3>
-                      <p className="text-[10px] md:text-[11px] text-muted-foreground truncate">{conv.preview}</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Quick Questions */}
-          <div className="p-3 md:p-4 border-t bg-card/50">
-            <div className="grid grid-cols-2 gap-1.5 md:gap-2">
-              {quickQuestions.map((item, index) => (
-                <button
-                  key={index}
-                  className="flex flex-col items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-2 md:py-2.5 rounded-xl bg-muted/40 hover:bg-muted transition-all duration-200 hover:shadow-sm hover:scale-[1.02]"
-                >
-                  <item.icon className={cn("h-3.5 md:h-4 w-3.5 md:w-4", item.color)} />
-                  <span className="text-[9px] md:text-[10px] font-semibold">{item.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* Main Chat Area */}
         <div className="flex-1 flex flex-col overflow-hidden w-full lg:w-auto">
           {/* Header */}
@@ -380,7 +311,7 @@ const ChatPage: React.FC = () => {
                 <Stethoscope className="h-4 w-4 md:h-5 md:w-5" />
               </div>
               <div>
-                <h1 className="text-sm md:text-lg font-semibold">Curana AI Assistant</h1>
+                <h1 className="text-sm md:text-lg font-semibold">Cura</h1>
                 <p className="text-[10px] md:text-xs opacity-90 hidden sm:block">Online • Ready to help</p>
               </div>
             </div>

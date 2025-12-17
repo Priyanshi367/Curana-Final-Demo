@@ -4,7 +4,7 @@ import goTo from "@/assets/goto.png";
 import inCare from "@/assets/incare.png";
 import vitalCheck from "@/assets/vitalcheck.png";
 import sutureHealth from "@/assets/suturehealth.png";
-import gehrimed from "@/assets/gehrimed.png";
+import gehrimed from "@/assets/GEHRIMED.png";
 import news1 from "@/assets/news-1.jpg";
 import news2 from "@/assets/news-2.jpg";
 import news3 from "@/assets/news-3.jpg";
