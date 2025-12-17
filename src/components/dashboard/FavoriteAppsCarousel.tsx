@@ -31,33 +31,46 @@ const defaultApplications: Application[] = [
 
 const FavoriteAppsCarousel = () => {
   const [favorites, setFavorites] = useState<string[]>(() => {
-    // Initialize state with default values first to prevent flash of empty state
+    // Always use default favorites on initial render
     const defaultFavorites = defaultApplications.map(app => app.id);
     
-    // Try to load from localStorage, but don't block initial render
+    // Clear any existing favorites from localStorage and set default
     if (typeof window !== 'undefined') {
       try {
-        const stored = localStorage.getItem("favoriteApps");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed;
-          }
-        }
-        // If no valid stored data, set default and save to localStorage
         localStorage.setItem("favoriteApps", JSON.stringify(defaultFavorites));
-        return defaultFavorites;
       } catch (error) {
-        console.error('Error parsing favorites from localStorage:', error);
-        return defaultFavorites;
+        console.error('Error setting default favorites:', error);
       }
     }
+    
     return defaultFavorites;
   });
-
+  
+  // Reset favorites to default when component mounts
   useEffect(() => {
+    const defaultFavorites = defaultApplications.map(app => app.id);
+    setFavorites(defaultFavorites);
+    try {
+      localStorage.setItem("favoriteApps", JSON.stringify(defaultFavorites));
+    } catch (error) {
+      console.error('Error resetting favorites:', error);
+    }
+  }, []);
+
+  // Update localStorage whenever favorites change (except during initial mount)
+  const isInitialMount = useRef(true);
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    
     if (favorites.length > 0) {
-      localStorage.setItem("favoriteApps", JSON.stringify(favorites));
+      try {
+        localStorage.setItem("favoriteApps", JSON.stringify(favorites));
+      } catch (error) {
+        console.error('Error updating favorites:', error);
+      }
     }
   }, [favorites]);
 
