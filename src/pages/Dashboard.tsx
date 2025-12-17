@@ -57,7 +57,7 @@ const Dashboard = () => {
           </div>
 
           {/* Quick Access & Tools */}
-          <div className="lg:col-span-1">
+          {/* <div className="lg:col-span-1">
             <QuickLinks />
           </div>
           <div className="lg:col-span-1">
@@ -65,7 +65,7 @@ const Dashboard = () => {
           </div>
           <div className="lg:col-span-1">
             <EssentialTools />
-          </div>
+          </div> */}
 
           {/* All Applications & Team Section */}
           <div className="lg:col-span-1 xl:col-span-2">
