@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import gehrimedImg from "@/assets/gehrimed.png";
@@ -30,37 +30,48 @@ const defaultApplications: Application[] = [
 ];
 
 const FavoriteAppsCarousel = () => {
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    // Initialize state with default values first to prevent flash of empty state
+    const defaultFavorites = defaultApplications.map(app => app.id);
+    
+    // Try to load from localStorage, but don't block initial render
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem("favoriteApps");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
+        }
+        // If no valid stored data, set default and save to localStorage
+        localStorage.setItem("favoriteApps", JSON.stringify(defaultFavorites));
+        return defaultFavorites;
+      } catch (error) {
+        console.error('Error parsing favorites from localStorage:', error);
+        return defaultFavorites;
+      }
+    }
+    return defaultFavorites;
+  });
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("favoriteApps");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setFavorites(parsed);
-          return;
-        }
-      }
-      // If we get here, either stored is null/undefined or not a valid array
-      const defaultFavorites = defaultApplications.map(app => app.id);
-      setFavorites(defaultFavorites);
-      localStorage.setItem("favoriteApps", JSON.stringify(defaultFavorites));
-    } catch (error) {
-      console.error('Error parsing favorites from localStorage:', error);
-      const defaultFavorites = defaultApplications.map(app => app.id);
-      setFavorites(defaultFavorites);
-      localStorage.setItem("favoriteApps", JSON.stringify(defaultFavorites));
+    if (favorites.length > 0) {
+      localStorage.setItem("favoriteApps", JSON.stringify(favorites));
     }
-  }, []);
+  }, [favorites]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   const [hasFavorites, setHasFavorites] = useState(false);
-  
-  const favoriteApps = defaultApplications.filter(app => favorites.includes(app.id));
-  
+
+  // Filter favorite apps and update hasFavorites state
+  const favoriteApps = useMemo(() => 
+    defaultApplications.filter(app => favorites.includes(app.id)),
+    [favorites]
+  );
+
   useEffect(() => {
     setHasFavorites(favoriteApps.length > 0);
   }, [favoriteApps]);
